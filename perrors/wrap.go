@@ -16,6 +16,10 @@ import (
  */
 
 func Wrap(ctx context.Context, err error, code ftag.Kind, message ...string) error {
+	return WrapWithCode(ctx, err, ftag.NotFound, message...)
+}
+
+func WrapWithCode(ctx context.Context, err error, code ftag.Kind, message ...string) error {
 	description := ""
 	externalDescription := ""
 
