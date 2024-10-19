@@ -15,8 +15,8 @@ import (
 * so most of the functionality wraps that libraries object.
  */
 
-func Wrap(ctx context.Context, err error, code ftag.Kind, message ...string) error {
-	return WrapWithCode(ctx, err, ftag.NotFound, message...)
+func Wrap(ctx context.Context, err error, message ...string) error {
+	return WrapWithCode(ctx, err, ftag.Internal, message...)
 }
 
 func WrapWithCode(ctx context.Context, err error, code ftag.Kind, message ...string) error {
