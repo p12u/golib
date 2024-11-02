@@ -3,8 +3,8 @@ package perrors
 import "github.com/Southclaws/fault/ftag"
 
 const (
-	Internal        ftag.Kind = ftag.Internal
-	NotFound        ftag.Kind = ftag.NotFound
-	InvalidArgument ftag.Kind = ftag.InvalidArgument
-	Unauthorized    ftag.Kind = "UNAUTHORIZED"
+	CodeInternal        ftag.Kind = ftag.Internal
+	CodeNotFound        ftag.Kind = ftag.NotFound
+	CodeInvalidArgument ftag.Kind = ftag.InvalidArgument
+	CodeUnauthorized    ftag.Kind = "UNAUTHORIZED"
 )

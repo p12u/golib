@@ -15,44 +15,48 @@ import (
 * so most of the functionality wraps that libraries object.
  */
 
-func Wrap(ctx context.Context, err error, message ...string) error {
-	return WrapWithCode(ctx, err, ftag.Internal, message...)
-}
-
-func WrapWithCode(ctx context.Context, err error, code ftag.Kind, message ...string) error {
-	description := ""
-	externalDescription := ""
-
-	if len(message) > 1 {
-		description = message[0]
+func Wrap(ctx context.Context, err error, message string, metadata map[string]any) error {
+	code := ftag.Get(err)
+	if code == "" {
+		code = CodeInternal
 	}
 
-	if len(message) > 2 {
-		externalDescription = message[1]
-	}
-
-	return wrap(ctx, err, &code, description, externalDescription)
+	return WrapWithCode(ctx, err, code, message, metadata)
 }
 
-func wrap(
+func WrapWithCode(
 	ctx context.Context,
 	err error,
-	code *ftag.Kind,
-	description string,
+	code ftag.Kind,
+	message string,
+	metadata map[string]any,
+) error {
+	return WrapForExternal(ctx, err, code, message, "", metadata)
+}
+
+func WrapForExternal(
+	ctx context.Context,
+	err error,
+	code ftag.Kind,
+	message string,
 	externalDescription string,
+	metadata map[string]any,
 ) error {
 	wrappers := []fault.Wrapper{}
 
 	if ctx != nil {
+		if metadata != nil {
+			ctx = fctx.WithMeta(ctx, metadataToKv(metadata)...)
+		}
 		wrappers = append(wrappers, fctx.With(ctx))
 	}
 
-	if code != nil {
-		wrappers = append(wrappers, ftag.With(*code))
+	if code != "" {
+		wrappers = append(wrappers, ftag.With(code))
 	}
 
-	if description != "" {
-		wrappers = append(wrappers, fmsg.WithDesc(description, externalDescription))
+	if message != "" {
+		wrappers = append(wrappers, fmsg.WithDesc(message, externalDescription))
 	}
 
 	return fault.Wrap(

@@ -16,7 +16,7 @@ import (
 func CreateEntDriver(ctx context.Context, url string) (*entsql.Driver, error) {
 	db, err := sql.Open("pgx", url)
 	if err != nil {
-		return nil, perrors.Wrap(ctx, err, "failed to connect to database")
+		return nil, perrors.Wrap(ctx, err, "failed to connect to database", nil)
 	}
 
 	// Create an ent.Driver from `db`.
