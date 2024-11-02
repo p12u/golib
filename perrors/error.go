@@ -7,6 +7,7 @@ import (
 
 	"github.com/Southclaws/fault"
 	"github.com/Southclaws/fault/fctx"
+	"github.com/Southclaws/fault/fmsg"
 	"github.com/Southclaws/fault/ftag"
 )
 
@@ -16,7 +17,16 @@ func New(
 	message string,
 	metadata map[string]any,
 ) error {
-	wrappers := []fault.Wrapper{}
+	return new(ctx, code, message, metadata)
+}
+
+func new(
+	ctx context.Context,
+	code ftag.Kind,
+	message string,
+	metadata map[string]any,
+) error {
+	wrappers := []fault.Wrapper{withErrLocation(message, getLocation(4))}
 
 	if ctx != nil {
 		if metadata != nil {
@@ -33,11 +43,11 @@ func New(
 }
 
 func NewInternal(ctx context.Context, message string, metadata map[string]any) error {
-	return New(ctx, ftag.Internal, message, metadata)
+	return new(ctx, ftag.Internal, message, metadata)
 }
 
 func NewNotFound(ctx context.Context, message string, metadata map[string]any) error {
-	return New(ctx, ftag.NotFound, message, metadata)
+	return new(ctx, ftag.NotFound, message, metadata)
 }
 
 func metadataToKv(metadata map[string]any) []string {
@@ -47,4 +57,12 @@ func metadataToKv(metadata map[string]any) []string {
 	}
 
 	return keyvalues
+}
+
+func GetExternal(err error) string {
+	return fmsg.GetIssue(err)
+}
+
+func GetCode(err error) string {
+	return string(ftag.Get(err))
 }

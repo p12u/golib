@@ -21,7 +21,7 @@ func Wrap(ctx context.Context, err error, message string, metadata map[string]an
 		code = CodeInternal
 	}
 
-	return WrapWithCode(ctx, err, code, message, metadata)
+	return wrap(ctx, err, code, message, "", metadata)
 }
 
 func WrapWithCode(
@@ -31,7 +31,7 @@ func WrapWithCode(
 	message string,
 	metadata map[string]any,
 ) error {
-	return WrapForExternal(ctx, err, code, message, "", metadata)
+	return wrap(ctx, err, code, message, "", metadata)
 }
 
 func WrapForExternal(
@@ -42,7 +42,18 @@ func WrapForExternal(
 	externalDescription string,
 	metadata map[string]any,
 ) error {
-	wrappers := []fault.Wrapper{}
+	return wrap(ctx, err, code, message, externalDescription, metadata)
+}
+
+func wrap(
+	ctx context.Context,
+	err error,
+	code ftag.Kind,
+	message string,
+	externalDescription string,
+	metadata map[string]any,
+) error {
+	wrappers := []fault.Wrapper{withErrLocation(message, getLocation(4))}
 
 	if ctx != nil {
 		if metadata != nil {
