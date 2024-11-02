@@ -9,6 +9,7 @@ import (
 	"github.com/Southclaws/fault/fctx"
 	"github.com/Southclaws/fault/fmsg"
 	"github.com/Southclaws/fault/ftag"
+	"github.com/samber/lo"
 )
 
 func New(
@@ -65,4 +66,12 @@ func GetExternal(err error) string {
 
 func GetCode(err error) string {
 	return string(ftag.Get(err))
+}
+
+func GetMetadata(err error) map[string]any {
+	metadata := fctx.Unwrap(err)
+
+	return lo.MapEntries(metadata, func(key string, value string) (string, any) {
+		return key, value
+	})
 }

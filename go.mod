@@ -10,6 +10,7 @@ require (
 	github.com/jackc/pgx/v5 v5.7.1
 	github.com/labstack/echo/v4 v4.10.0
 	github.com/rs/zerolog v1.33.0
+	github.com/samber/lo v1.47.0
 	github.com/stretchr/testify v1.8.4
 )
 

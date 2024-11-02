@@ -24,6 +24,9 @@ func ErrorLogger() echo.MiddlewareFunc {
 
 				fields["stackrace"] = perrors.Stacktrace(v.Error)
 
+				metadata := perrors.GetMetadata(v.Error)
+				fields["errMeta"] = metadata
+
 				log.Error().
 					Err(v.Error).
 					Stack().
