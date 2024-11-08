@@ -1,12 +1,11 @@
 package http
 
 import (
-	"encoding/json"
 	"errors"
-	"io"
 	"net/http"
 
 	z "github.com/Oudwins/zog"
+	"github.com/Oudwins/zog/zhttp"
 	"github.com/p12u/golib/perrors"
 	"github.com/samber/lo"
 
@@ -36,18 +35,9 @@ func EBQ[Body CanValidate, Query CanValidate](
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 
-		body, err := io.ReadAll(c.Request().Body)
-		if err != nil {
-			return perrors.Wrap(nil, err, "failed reading request body", nil)
-		}
-
-		decodedBody := map[string]any{}
-		if err := json.Unmarshal(body, &decodedBody); err != nil {
-			return perrors.Wrap(ctx, err, "failed unmarshaling request body", nil)
-		}
-
+		// ParseBody
 		var t Body
-		errsMap := t.Validator().Parse(decodedBody, &t)
+		errsMap := t.Validator().Parse(zhttp.Request(c.Request()), &t)
 		if errsMap != nil {
 			sanitizedErrs := z.Errors.SanitizeMap(errsMap)
 			return echo.NewHTTPError(
@@ -139,18 +129,8 @@ func EB[Body CanValidate](
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 
-		body, err := io.ReadAll(c.Request().Body)
-		if err != nil {
-			return perrors.Wrap(nil, err, "failed reading request body", nil)
-		}
-
-		decodedBody := map[string]any{}
-		if err := json.Unmarshal(body, &decodedBody); err != nil {
-			return perrors.Wrap(ctx, err, "failed unmarshaling request body", nil)
-		}
-
 		var t Body
-		errsMap := t.Validator().Parse(decodedBody, &t)
+		errsMap := t.Validator().Parse(zhttp.Request(c.Request()), &t)
 		if errsMap != nil {
 			sanitizedErrs := z.Errors.SanitizeMap(errsMap)
 			return echo.NewHTTPError(
