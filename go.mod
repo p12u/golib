@@ -4,6 +4,7 @@ go 1.23.2
 
 require (
 	entgo.io/ent v0.14.1
+	github.com/Oudwins/zog v0.11.0
 	github.com/Southclaws/fault v0.8.1
 	github.com/getsentry/sentry-go v0.29.1
 	github.com/go-playground/validator/v10 v10.22.1
@@ -11,7 +12,7 @@ require (
 	github.com/labstack/echo/v4 v4.10.0
 	github.com/rs/zerolog v1.33.0
 	github.com/samber/lo v1.47.0
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 )
 
 require (
@@ -32,6 +33,7 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	golang.org/x/crypto v0.27.0 // indirect
+	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8 // indirect
 	golang.org/x/net v0.23.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.25.0 // indirect
