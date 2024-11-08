@@ -1,7 +1,7 @@
 package http
 
 import (
-	"errors"
+	"fmt"
 	"net/http"
 
 	z "github.com/Oudwins/zog"
@@ -40,13 +40,15 @@ func EBQ[Body CanValidate, Query CanValidate](
 		errsMap := t.Validator().Parse(zhttp.Request(c.Request()), &t)
 		if errsMap != nil {
 			sanitizedErrs := z.Errors.SanitizeMap(errsMap)
+			firstError := sanitizedErrs["$first"][0]
+			message := fmt.Sprintf("request validation failed: %s", firstError)
 			return echo.NewHTTPError(
 				http.StatusBadRequest,
-				errors.New("request body validation failed").Error(),
+				message,
 			).WithInternal(perrors.New(
 				ctx,
 				perrors.CodeValidationFailed,
-				sanitizedErrs["$first"][0],
+				firstError,
 				map[string]any{"validationErrors": sanitizedErrs},
 			))
 		}
@@ -67,13 +69,15 @@ func EBQ[Body CanValidate, Query CanValidate](
 		errsMap = q.Validator().Parse(queryParams, &q)
 		if errsMap != nil {
 			sanitizedErrs := z.Errors.SanitizeMap(errsMap)
+			firstError := sanitizedErrs["$first"][0]
+			message := fmt.Sprintf("query validation failed: %s", firstError)
 			return echo.NewHTTPError(
 				http.StatusBadRequest,
-				errors.New("query validation failed").Error(),
+				message,
 			).WithInternal(perrors.New(
 				ctx,
 				perrors.CodeValidationFailed,
-				sanitizedErrs["$first"][0],
+				firstError,
 				map[string]any{"validationErrors": sanitizedErrs},
 			))
 		}
@@ -106,13 +110,15 @@ func EQ[Query CanValidate](
 		errsMap := q.Validator().Parse(queryParams, &q)
 		if errsMap != nil {
 			sanitizedErrs := z.Errors.SanitizeMap(errsMap)
+			firstError := sanitizedErrs["$first"][0]
+			message := fmt.Sprintf("query validation failed: %s", firstError)
 			return echo.NewHTTPError(
 				http.StatusBadRequest,
-				errors.New("query validation failed").Error(),
+				message,
 			).WithInternal(perrors.New(
 				ctx,
 				perrors.CodeValidationFailed,
-				sanitizedErrs["$first"][0],
+				firstError,
 				map[string]any{"validationErrors": sanitizedErrs},
 			))
 		}
@@ -133,13 +139,15 @@ func EB[Body CanValidate](
 		errsMap := t.Validator().Parse(zhttp.Request(c.Request()), &t)
 		if errsMap != nil {
 			sanitizedErrs := z.Errors.SanitizeMap(errsMap)
+			firstError := sanitizedErrs["$first"][0]
+			message := fmt.Sprintf("request validation failed: %s", firstError)
 			return echo.NewHTTPError(
 				http.StatusBadRequest,
-				errors.New("request body validation failed").Error(),
+				message,
 			).WithInternal(perrors.New(
 				ctx,
 				perrors.CodeValidationFailed,
-				sanitizedErrs["$first"][0],
+				firstError,
 				map[string]any{"validationErrors": sanitizedErrs},
 			))
 		}
